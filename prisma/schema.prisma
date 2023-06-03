@@ -36,6 +36,15 @@ model Account {
     @@unique([provider, providerAccountId])
 }
 
+model Post {
+    id String @id @default(cuid())
+    createdAt DateTime @default(now())
+    content String @db.VarChar(255)
+    authorId String
+
+    @@index([authorId])
+}
+
 model Session {
     id           String   @id @default(cuid())
     sessionToken String   @unique

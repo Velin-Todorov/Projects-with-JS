@@ -6,7 +6,7 @@ import { api } from "~/utils/api";
 import { SignIn, SignInButton, useUser, SignOutButton } from '@clerk/nextjs'
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const { data } = api.posts.getAll.useQuery()
   const user = useUser();
 
   return (
@@ -21,6 +21,9 @@ const Home: NextPage = () => {
           {!user.isSignedIn && <SignInButton />}
           {!!user.isSignedIn && <SignOutButton />}
         </div>
+        <div>
+          {data?.map( (post) => (<div key={post.id}>{post.content}</div>))}
+        </div>
       </main>
     </>
   );
@@ -31,7 +34,7 @@ export default Home;
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
 
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
+  const { data: secretMessage } = api.posts.getSecretMessage.useQuery(
     undefined, // no input
     { enabled: sessionData?.user !== undefined },
   );
