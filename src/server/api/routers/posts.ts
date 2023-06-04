@@ -17,6 +17,7 @@ const filterUserForClient = (user: User) => {
   }
 }
 
+
 export const postsRouter = createTRPCRouter({
   
   getAll: publicProcedure.query(async ({ ctx }) => {

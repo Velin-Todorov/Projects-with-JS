@@ -2,10 +2,15 @@ import { type NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-import { RouterOutputs, api } from "~/utils/api";
+import { api } from "~/utils/api";
+import type { RouterOutputs } from "~/utils/api";
 import { SignIn, SignInButton, useUser, SignOutButton } from '@clerk/nextjs'
 import { Router } from "next/router";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime"
+import Image from "next/image";
 
+dayjs.extend(relativeTime)
 
 
 const CreatePostWizard = () => {
@@ -14,7 +19,7 @@ const CreatePostWizard = () => {
 	if (!user) return null
 
 	return (<div className="flex gap-3">
-		<img src={user.profileImageUrl} alt="Profile image" className="h-16 w-16 rounded-full" />
+		<Image src={user.profileImageUrl} alt="Profile image" className="h-13 w-13 rounded-full" width={56} height={56} />
 		<input placeholder="Type emojis" className=" grow bg-transparent outline-none" />
 	</div>)
 }
@@ -24,17 +29,26 @@ type PostWithUser = RouterOutputs['posts']['getAll'][number]
 const PostView = (props: PostWithUser) => {
 	const {post, author} = props;
 	return (
-	<div key={post.id} className="border-b border bg-slate-400 p-8 flex">
-		<img src={author.profilePic} className="h-14 w-14 rounded-full" />
+	<div key={post.id} className="border-b border p-8 flex">
+		<Image src={author.profilePic} className="h-14 w-14 rounded-full" 
+    alt={`@{author.username}'s profile picture`} width={56} height={56}
+    />
 		<div className="flex flex-col">
-			<div className="flex text-slate-400">
+			<div className="flex">
 				<span>{`@${author.name!}`}</span>
+        		<span className="font-thin">{`  - ${dayjs(post.createdAt).fromNow()}`}</span>
 			</div>
+      		<div className="flex p-2">
+        		<span>
+					{post.content}
+        		</span>
+      		</div>
 		</div>
 	</div>)}
 
 
 const Home: NextPage = () => {
+
   const { data, isLoading} = api.posts.getAll.useQuery()
   const user = useUser();
 
