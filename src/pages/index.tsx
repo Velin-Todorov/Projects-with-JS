@@ -1,17 +1,14 @@
 import { type NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
-import Link from "next/link";
 import { useState } from "react";
 import { api } from "~/utils/api";
 import type { RouterOutputs } from "~/utils/api";
-import { SignIn, SignInButton, useUser, SignOutButton } from '@clerk/nextjs'
-import { Router } from "next/router";
+import { SignInButton, useUser } from '@clerk/nextjs'
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import Image from "next/image";
 import { LoadingPage, LoadingSpinner } from "~/components/loading";
-import { set } from "zod";
 
 
 dayjs.extend(relativeTime)
